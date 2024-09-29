@@ -1,5 +1,26 @@
 console.log("Welcome to Logan Delaney's Rock, Paper, Scissors");
 
+const buttons = document.querySelectorAll(".btn");
+const playerScore = document.querySelector("#pscore");
+const compScore = document.querySelector("#cscore");
+const outcomeText = document.querySelector("#outcome");
+const subtext = document.querySelector("#subtext")
+
+let humanScore = 0;
+let computerScore = 0;
+
+
+
+buttons.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    subtext.textContent = "Please make a selection:";
+    let playerChoice = e.target.id;
+    let computerChoice = getComputerChoice()
+    console.log(playRound(playerChoice, computerChoice));
+
+  })
+})
+
 function getComputerChoice() {
   let computerSelect = "";
   let compNum = Math.random();
@@ -12,80 +33,41 @@ function getComputerChoice() {
   }
   return computerSelect;
 }
-//console.log(getComputerChoice());
-
-function getPlayerChoice(message = "Please input Rock, Paper, or Scissors") {
-  switch (prompt(message).toLowerCase()) {
-    case "rock":
-      return "rock";
-      break;
-    case "paper":
-      return "paper";
-      break;
-    case "scissors":
-      return "scissors";
-      break;
-    default:
-      return getPlayerChoice(
-        "Please enter a valid option. Rock, Paper, or Scissors"
-      );
-  }
-}
-//console.log(getPlayerChoice());
-
-let humanScore = 0;
-let computerScore = 0;
 
 function playRound(playerChoice, computerChoice) {
-  if (playerChoice == computerChoice) {
-    alert("You tie. " + playerChoice + " equals " + computerChoice);
-    return 0;
-  } else if (playerChoice == "rock" && computerChoice == "scissors") {
-    alert("You win. " + playerChoice + " beats " + computerChoice);
-    return 1;
-  } else if (playerChoice == "paper" && computerChoice == "rock") {
-    alert("You win. " + playerChoice + " beats " + computerChoice);
-    return 1;
-  } else if (playerChoice == "scissors" && computerChoice == "paper") {
-    alert("You win. " + playerChoice + " beats " + computerChoice);
-    return 1;
-  } else {
-    alert("You lose. " + playerChoice + " loses to " + computerChoice);
-    return 2;
+  if (playerChoice === computerChoice) {
+    outcomeText.textContent = "You tied. " + playerChoice + " = " + computerChoice;
+    playerScore.textContent = "Your score is: " + humanScore;
+    compScore.textContent = "Computer score is: " + computerScore;
+  }
+  else if (playerChoice === "rock" && computerChoice == "scissors"
+    || playerChoice === "paper" && computerChoice == "rock"
+    || playerChoice === "scissors" && computerChoice == "paper"
+  ) {
+    humanScore++;
+    outcomeText.textContent = "You win. " + playerChoice + " beats " + computerChoice;
+    playerScore.textContent = "Your score is: " + humanScore;
+    compScore.textContent = "Computer score is: " + computerScore;
+  }
+  else if (playerChoice === "rock" && computerChoice == "paper"
+    || playerChoice === "paper" && computerChoice == "scissors"
+    || playerChoice === "scissors" && computerChoice == "rock"
+  ) {
+    computerScore++;
+    outcomeText.textContent = "You lose. " + playerChoice + " loses to " + computerChoice;
+    playerScore.textContent = "Your score is: " + humanScore;
+    compScore.textContent = "Computer score is: " + computerScore;
+  }
+
+  if (humanScore == 5) {
+    subtext.textContent = "You win! You were the first to 5";
+    humanScore = 0;
+    computerScore = 0;
+  }
+
+  else if (computerScore == 5) {
+    subtext.textContent = "You lose! Computer was the first to 5";
+    humanScore = 0;
+    computerScore = 0;
   }
 }
-
-//console.log(playRound(getPlayerChoice(), getComputerChoice()))
-
-function playGame() {
-  while (humanScore < 3 && computerScore < 3) {
-    roundScore = playRound(getPlayerChoice(), getComputerChoice());
-    if (roundScore == 1) {
-      humanScore++;
-      alert(
-        "Player gains one point. The score is Player: " +
-          humanScore +
-          " Computer: " +
-          computerScore
-      );
-    } else if (roundScore == 2) {
-      computerScore++;
-      alert(
-        "Computer gains one point. The score is Player: " +
-          humanScore +
-          " Computer: " +
-          computerScore
-      );
-    } else {
-      alert(
-        "No score change that round. The score is Player: " +
-          humanScore +
-          " Computer: " +
-          computerScore
-      );
-    }
-  }
-  alert("Final Score is Player: " + humanScore + " Computer: " + computerScore);
-}
-
-playGame();
